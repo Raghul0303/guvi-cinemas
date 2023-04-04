@@ -1,0 +1,268 @@
+# guvi-cinemas
+!pip install dnspython
+!pip install pymongo[srv]
+!pip install qrcode
+!pip install dnspython
+!pip install pymongo[srv]
+!pip install Pillow
+!pip install simple-colors
+import pymongo
+client = pymongo.MongoClient("mongodb+srv://raghulpachayappan:pcdk0303@cluster0.6anqyvx.mongodb.net/?retryWrites=true&w=majority",)
+db=client.guvi
+records=db.guvicinemas
+
+from pymongo import MongoClient
+from PIL import Image
+import qrcode
+import matplotlib.pyplot as plt
+import random
+import io
+import pandas as pd
+from os import name
+
+def main():
+  print('welcome to guvi cinemas')
+  print("please confirm weather you want 'LOGIN' or 'REGISTER ':\n 1.login 2.register")
+  a=input()
+  if a=='1':
+    login()
+  elif a=='2':
+    register()
+  else:
+    print("wrong selection \n please confirm weather you want LOGIN or REGISTER :\n 1.login 2.register")
+main()
+
+def register():
+  global name
+  name=input("Please enter your name:")
+  Email=input("Enter your valid email id:")
+  ph=input("Enter your phonenumber:")
+  Pw=input("please enter your password:")
+  image=input("Please provide the URL to upload your profile picture: ")
+  im = Image.open(image)
+  image_bytes = io.BytesIO()
+  im.save(image_bytes, format='JPEG')
+  A = {
+   "NAME":name,
+   "EMAIL":Email,
+   "PH":ph,
+   "PW":Pw,
+   'image':image_bytes.getvalue()
+   }
+  records.insert_one(A)
+  print()
+  print("Registration successfull")
+  print()
+  print("Hi {},Welcome to Guvicinemas!".format(name))
+  import matplotlib.pyplot as plt
+  image=records.find_one({"NAME":name})
+  pil_img = Image.open(io.BytesIO(image['image']))
+  plt.axis('off')
+  plt.imshow(pil_img)
+  plt.show()
+  print()
+  selection()
+
+
+def login():
+  a=input("Enter your valid email id:")
+  b=input("please enter your password:")
+  jk={"EMAIL":a,"PW":b}
+  X=records.find(jk,{"_id":1,"NAME":1,"Email":1,"PH":1,"PW":1,"image":1})
+  a=[]
+  for i in X:
+    a.append(i)
+    global name
+    name=i.get("NAME")
+    
+  if not a:
+    print("wrong username or password")
+    login()
+  else:
+    print()
+    print("Login Successfull")
+    print()
+    print("Hi {},Welcome to Guvicinemas!".format(name))
+    import matplotlib.pyplot as plt
+    image=records.find_one({"NAME":name})
+    pil_img = Image.open(io.BytesIO(image['image']))
+    plt.imshow(pil_img)
+    plt.axis('off')
+    plt.show()
+    print()
+    selection()
+    
+    docs=db.moviecollections
+feilds=db.theatres
+movies=db.list
+
+movielist=[{"_id":1,"Movie":"jhon wick 4","CBFC":"U\A"},
+   {"_id":2,"Movie":"pathu thalai","CBFC":"U\A"},
+   {"_id":3,"Movie":"viduthalai","CBFC":"A"},
+   {"_id":4,"Movie":"leo","CBFC":"U"},
+   {"_id":5,"Movie":"dasara","CBFC":"U"}                                                                                                                                                  
+   ]
+theatrelist=[{"_id":1,"Theatre":"karpagam complex","seat_availablity":20,"Timings":"Morning","Rating":"4"},
+   {"_id":2,"Theatre":"SPI cinemas","seat_availablity":20,"Timings":"Evening","Rating":"4"},
+   {"_id":3,"Theatre":"INOX","seat_availablity":20,"Timings":"Morning","Rating":"4.5"},
+   {"_id":4,"Theatre":"INOX","seat_availablity":20,"Timings":"Evening","Rating":"4.5"},
+   {"_id":5,"Theatre":"karpagam complex","seat_availablity":20,"Timings":"Morning","Rating":"4"},
+   {"_id":6,"Theatre":"KG cinemas","seat_availablity":20,"Timings":"Evening","Rating":"3.5"}]
+movies.insert_many(movielist)
+feilds.insert_many(theatrelist)
+     
+     
+     import pandas as pd
+def selection():
+  doj=movies.find()
+  nee = pd.DataFrame.from_dict(doj)
+  ggg=nee.set_index('_id')
+  print(ggg)
+
+  r=int(input("Please select the movie\n"))
+  if r==1:
+    name="John wick 4"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:john wick 4 CBFC:U\A")
+  elif r==2:
+    name="pathu thala"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:pathu thala CBFC:U\A")
+  elif r==3:
+    name="viduthalai"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:viduthalai  CBFC: A")
+  elif r==4:
+    name="leo"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:leo CBFC:U")
+  elif r==5:
+    name="dasara"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:dasara CBFC:U")
+  else:
+    print("wrong selection")
+    selection()
+    
+    import pandas as pd
+def selection():
+  doj=movies.find()
+  nee = pd.DataFrame.from_dict(doj)
+  ggg=nee.set_index('_id')
+  print(ggg)
+
+  r=int(input("Please select the movie\n"))
+  if r==1:
+    name="John wick 4"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:john wick 4 CBFC:U\A")
+  elif r==2:
+    name="pathu thala"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:pathu thala CBFC:U\A")
+  elif r==3:
+    name="viduthalai"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:viduthalai  CBFC: A")
+  elif r==4:
+    name="leo"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:leo CBFC:U")
+  elif r==5:
+    name="dasara"
+    ja= feilds.find()
+    jaa = pd.DataFrame.from_dict(ja)
+    jaj=jaa.set_index('_id')
+    print(jaj)
+    print()
+    ticketbooking()
+    print("Movie:dasara CBFC:U")
+  else:
+    print("wrong selection")
+    selection()
+    
+    import qrcode
+def qr(r):
+  img = qrcode.make(r)
+  type(img)  # qrcode.image.pil.PilImage
+  img.save("some_file.png")
+  from PIL import Image
+  im=Image.open("some_file.png")
+  plt.imshow(img)
+  plt.axis('off')
+  plt.show()
+  im
+qr('r')
+
+from os import name
+import pandas as pd
+import random
+def display_ticket(f):
+  global name
+  print()
+  print()
+  print()
+  print( '          GUVICINEMAS       ',['bold', 'underlined'])
+  x=records.find({"NAME":name},{"_id":0,"NAME":1,"PH":1,"EMAIL":1})
+  g=feilds.find({"_id":f},{"_id":0,"Theatre":1,"Timings":1})
+  global fo
+  fo={}
+  for i in x:
+    fo.update(i)
+  for b in g:
+    fo.update(b)
+  for key, value in fo.items():
+    print(key,  ' : ' , value)
+  seatnum=[]
+  for cv in range(count):
+    seatnum.append(random.randint(0,20))
+  print("seat  number: ",*seatnum)
+  print("No of tickets:",count)
+  qr(fo)
+  
+  
